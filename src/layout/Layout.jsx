@@ -1,13 +1,17 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import { useAuth } from "../context/AuthContext";
 
 
 const Layout = () => {
-  const logged = true
+  const state = useAuth()
+  const token = state.state.token
+
+
   return (
     <>
-      {logged ? <Navbar>
+      {token ? <Navbar>
 
       </Navbar> : ""}
 

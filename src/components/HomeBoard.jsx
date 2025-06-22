@@ -1,9 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const HomeBoard = ({ title, image }) => {
+const HomeBoard = ({ id, title, image }) => {
     return (
-        <Link to="/board/2">
+        <Link to={`/board/${id}`}>
             <div className="flex flex-col items-center justify-center 
         shadow-lg m-2 rounded-md p-1 w-[300px] 
         bg-white/80 hover:bg-white/90 transition duration-200 backdrop-blur-sm
