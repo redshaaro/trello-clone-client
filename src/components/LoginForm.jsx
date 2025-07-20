@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext"
-import axios from 'axios';
+import { publicAxios } from '../lib/axios';
+import { login } from '../services/RegisterationService';
 
 
 const LoginForm = () => {
@@ -15,13 +16,15 @@ const LoginForm = () => {
     const handlesubmit = async (e) => {
         e.preventDefault()
         try {
-            const res = await axios.post("http://localhost:3000/api/auth/login", {
-                username, password
-            })
+            console.log(username)
+            console.log(password)
+            const res = await login(username, password)
+
+
 
             localStorage.setItem("token", res.data.token)
             dispatch({ type: 'LOGIN', payload: { user: res.data.user, token: res.data.token } });
-            console.log(res)
+
 
 
 
@@ -36,7 +39,7 @@ const LoginForm = () => {
 
 
     }
-    
+
     return (
         <form onSubmit={handlesubmit} className=' flex flex-col items-center gap-[150px]    h-full shadow-lg  rounded-md p-1 w-[400px] 
         bg-white/80 hover:bg-white/90 transition duration-200 backdrop-blur-sm

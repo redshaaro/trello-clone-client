@@ -14,7 +14,8 @@ const BoardCard = ({ id, title, isDragging = false }) => {
       {...attributes}
       {...listeners}
       style={style}
-      className="bg-white p-3 rounded shadow cursor-grab"
+      className={`p-3 mb-2 cursor-grab rounded shadow bg-white ${isDragging ? 'ring-2 ring-blue-500 opacity-80' : ''
+        }`}
     >
       {title}
     </div>

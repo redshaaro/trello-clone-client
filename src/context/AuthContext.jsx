@@ -20,9 +20,12 @@ useEffect(() => {
   if (state.token) {
     setAuthToken(state.token);
   } else {
-    setAuthToken(null); // clear token
+    setAuthToken(null);  
   }
+
 }, [state.token]);
+console.log("Auth token set to:", state.token);
+
 
   return (
     <AuthContext.Provider value={{ state, dispatch }}>
