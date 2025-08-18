@@ -5,12 +5,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Modal from './ui/Modal';
 import CreateBoardForm from './CreateBoardForm';
+import { useApp } from '../context/AppContext';
 
 const Navbar = () => {
-    const { dispatch, state } = useAuth();
+    const { dispatch} = useAuth();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+      const {boards, setBoards} = useApp()
+
 
     const handleLogOut = () => {
         dispatch({ type: "LOGOUT" });
@@ -18,7 +20,7 @@ const Navbar = () => {
         navigate("/login");
     };
 
-    
+
 
     return (
         <>
@@ -48,7 +50,7 @@ const Navbar = () => {
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                 <h2 className="text-xl font-bold mb-4">Create New Board</h2>
-              <CreateBoardForm setIsModalOpen={setIsModalOpen} ></CreateBoardForm>
+                <CreateBoardForm setBoards={setBoards} setIsModalOpen={setIsModalOpen} boards={boards} ></CreateBoardForm>
             </Modal>
         </>
     );

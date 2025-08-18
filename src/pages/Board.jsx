@@ -8,6 +8,7 @@ import {
 } from '@dnd-kit/core';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
+
 import {
   SortableContext,
   horizontalListSortingStrategy,
@@ -16,20 +17,26 @@ import SortableColumn from '../components/SortableColumn';
 import BoardCard from '../components/BoardCard';
 import { useBoard } from '../hooks/useBoard';
 import { useDragHandlers } from '../hooks/useDragHandlers';
-import { useEffect, useState } from 'react';
+import { useEffect, useOptimistic, useState } from 'react';
 import { fetchboardname } from '../services/BoardService';
+import SimpleModal from '../components/ui/SimpleModal';
+import CreateColumnForm from '../components/CreateColumnForm';
 
 
 const Board = () => {
   const { columns, setColumns, boardId } = useBoard();
+  // const [optimisticColumns, setOptimisticColumns] = useOptimistic(columns, (columns, newColumn) => [...columns, newColumn])
   const [boardname, setBoardName] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
 
+
+
+
   useEffect(() => {
     const getBoardname = async (boardid) => {
-      const res = await fetchboardname(boardId)
+      const res = await fetchboardname(boardid)
 
 
       setBoardName(res.data.board[0].name)
@@ -59,7 +66,13 @@ const Board = () => {
       <div className='flex items-center justify-between bg-black/50 p-4'>
         <div className="text-white text-3xl ">{boardname}</div>
         <div className='flex items-center gap-3'>
-          <div className='text-white   '><AddCircleIcon className='text-3xl'></AddCircleIcon></div>
+          <div onClick={() => setIsModalOpen(true)} className='text-white cursor-pointer   '><AddCircleIcon className='text-3xl'></AddCircleIcon></div>
+          <SimpleModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <h2 className="text-xl font-bold mb-4">Create New Column</h2>
+
+
+            <CreateColumnForm boardId={boardId} setIsModalOpen={setIsModalOpen} setColumns={setColumns} columns={columns}></CreateColumnForm>
+          </SimpleModal>
 
           <div className='text-white   '><SettingsIcon className='text-3xl'></SettingsIcon></div>
 
@@ -74,7 +87,7 @@ const Board = () => {
 
       </div>
 
-      <div className="p-6 overflow-x-auto">
+      <div className="p-6 overflow-x-auto ">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -88,6 +101,7 @@ const Board = () => {
             <div className="flex gap-6 w-max">
               {columns.map(col => (
                 <SortableColumn
+                  setColumns={setColumns}
                   key={`column-${col.id}`}
                   id={`column-${col.id}`}
                   title={col.name}
@@ -95,6 +109,7 @@ const Board = () => {
                 />
               ))}
             </div>
+
           </SortableContext>
 
           <DragOverlay>
@@ -110,8 +125,12 @@ const Board = () => {
                 </div>
               </div>
             ) : null}
+
           </DragOverlay>
+
         </DndContext>
+
+
       </div>
     </div>
   );

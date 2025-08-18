@@ -21,7 +21,7 @@ export const useBoard = () => {
     try {
       const data = await fetchBoardColumnsWithTasks(id, state.token);
 
-       
+
       const sortedColumns = data.sort((a, b) => a.position - b.position);
 
       setColumns(sortedColumns);

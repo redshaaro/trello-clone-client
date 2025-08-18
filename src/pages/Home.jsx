@@ -6,17 +6,19 @@ import HomeBoard from '../components/HomeBoard';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { fetchboards } from '../services/BoardService';
+import { useApp } from '../context/AppContext';
 
 
 
 const Home = () => {
   const navigate = useNavigate();
   const { state } = useAuth();
-  const [boards, setBoards] = useState([])
+  const { boards, setBoards } = useApp()
+
   useEffect(() => {
     getData()
   }, [state.token])
-  //securing route
+
   useEffect(() => {
     if (state.token === null) {
       navigate("/register");

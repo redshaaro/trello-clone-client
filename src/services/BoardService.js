@@ -1,5 +1,5 @@
 import { authAxios } from "../lib/axios"
-import axios from "axios"
+
 export const fetchboards = async () => {
   try {
     const res = await authAxios.get("/boards")
@@ -40,10 +40,15 @@ export const fetchBoardColumnsWithTasks = async (boardId) => {
 export const createBoard = async (name) => {
   try {
     const res = await authAxios.post("/boards", { name })
-    return res
+
+
+    return res.data.createdboard || [];
 
   } catch (err) {
     console.log(err)
+    return [];
+
+
   }
 
 }
@@ -65,16 +70,36 @@ export const updateTaskPosition = async ({ taskId, sourceColumnId, targetColumnI
 
 export const updateColumnPosition = async ({ columnId, sourceIndex, targetIndex }) => {
   try {
-    
+
 
     const response = await authAxios.put(`/columns/moveColumn`, {
-         columnId,
-        sourceIndex,
-       targetIndex,
+      columnId,
+      sourceIndex,
+      targetIndex,
     });
     return response.data;
   } catch (error) {
     console.error("Error in updateColumnPosition:", error?.response?.data || error.message);
     throw error;
   }
+};
+export const createColumn = async (name, boardId) => {
+  try {
+    const res = await authAxios.post("/columns", { name, boardId })
+    return res
+
+  } catch (err) {
+    console.log("Error in creating column " + err)
+
+  }
+
+}
+export const createTask = async (taskData) => {
+    try {
+        const res = await authAxios.post("/tasks", taskData);
+        return res.data.createdtask; // Make sure this matches your backend response
+    } catch (err) {
+        console.error("Error creating task:", err);
+        throw err;
+    }
 };

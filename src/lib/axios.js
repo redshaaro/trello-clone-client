@@ -7,7 +7,7 @@ export const publicAxios = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
-    
+
 });
 
 
@@ -17,6 +17,8 @@ export const authAxios = axios.create({
         'Content-Type': 'application/json',
     },
 });
+
+
 
 const token = localStorage.getItem('token');
 if (token) {
@@ -30,3 +32,13 @@ export const setAuthToken = (token) => {
         delete authAxios.defaults.headers.common['Authorization'];
     }
 };
+authAxios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response.status === 401) {
+            localStorage.removeItem('token');
+            window.location.href = '/login'; // Redirect to login
+        }
+        return Promise.reject(error);
+    }
+);
