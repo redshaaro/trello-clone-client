@@ -68,7 +68,7 @@ const SortableColumn = ({ id,setColumns, title, tasks = [] }) => {
       >
         <div className="flex flex-col gap-3">
           {tasks.map(task => (
-            <BoardCard key={task.id} id={task.id} title={task.title} />
+            <BoardCard  setColumns={setColumns} key={task.id} id={task.id} title={task.title} />
           ))}
         </div>
       </SortableContext>

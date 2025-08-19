@@ -95,11 +95,70 @@ export const createColumn = async (name, boardId) => {
 
 }
 export const createTask = async (taskData) => {
-    try {
-        const res = await authAxios.post("/tasks", taskData);
-        return res.data.createdtask; // Make sure this matches your backend response
-    } catch (err) {
-        console.error("Error creating task:", err);
-        throw err;
-    }
+  try {
+    const res = await authAxios.post("/tasks", taskData);
+    return res.data.createdtask; // Make sure this matches your backend response
+  } catch (err) {
+    console.error("Error creating task:", err);
+    throw err;
+  }
 };
+export const getTaskById = async (id) => {
+  try {
+    console.log(id)
+    const res = await authAxios.get(`/tasks/gettask/${id}`);
+    console.log(res)
+    return res
+  } catch (err) {
+    console.error("Error fetching task", err);
+    throw err;
+  }
+};
+export const editTask = async (id, data) => {
+  try {
+    const res = await authAxios.put(`/tasks/${id}`, data);
+    return res;
+  } catch (err) {
+    console.error("Error updating task", err);
+    throw err;
+  }
+};
+export const deleteList = async (id) => {
+  try {
+   const res= await authAxios.delete(`/columns/${id}`)
+   return res
+
+  } catch (err) {
+    console.log(err)
+    throw err
+
+  }
+
+}
+export const deleteTask = async (id) => {
+  try {
+   const res= await authAxios.delete(`/tasks/${id}`)
+   return res
+
+  } catch (err) {
+    console.log(err)
+    throw err
+
+  }
+
+}
+export const deleteBoard = async (id) => {
+  try {
+   const res= await authAxios.delete(`/boards/${id}`)
+   return res
+
+  } catch (err) {
+    console.log(err)
+    throw err
+
+  }
+
+}
+
+
+

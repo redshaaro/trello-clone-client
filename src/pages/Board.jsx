@@ -8,6 +8,8 @@ import {
 } from '@dnd-kit/core';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { deleteBoard } from '../services/BoardService';
+import { useNavigate } from 'react-router-dom';
 
 import {
   SortableContext,
@@ -28,6 +30,22 @@ const Board = () => {
   // const [optimisticColumns, setOptimisticColumns] = useOptimistic(columns, (columns, newColumn) => [...columns, newColumn])
   const [boardname, setBoardName] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+
+  const handleDeleteBoard = async () => {
+    try {
+      await deleteBoard(boardId);
+
+      setIsDeleteModalOpen(false);
+      navigate("/"); // redirect to home
+    } catch (err) {
+      console.error("Error deleting board:", err);
+      alert("Failed to delete board. Please try again.");
+    }
+  };
 
 
 
@@ -74,8 +92,12 @@ const Board = () => {
             <CreateColumnForm boardId={boardId} setIsModalOpen={setIsModalOpen} setColumns={setColumns} columns={columns}></CreateColumnForm>
           </SimpleModal>
 
-          <div className='text-white   '><SettingsIcon className='text-3xl'></SettingsIcon></div>
-
+          <div
+  className="text-white cursor-pointer"
+  onClick={() => setIsSettingsModalOpen(true)}
+>
+  <SettingsIcon className="text-3xl" />
+</div>
 
 
 
@@ -94,23 +116,27 @@ const Board = () => {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <SortableContext
-            items={columns.map(col => `column-${col.id}`)}
-            strategy={horizontalListSortingStrategy}
-          >
-            <div className="flex gap-6 w-max">
-              {columns.map(col => (
-                <SortableColumn
-                  setColumns={setColumns}
-                  key={`column-${col.id}`}
-                  id={`column-${col.id}`}
-                  title={col.name}
-                  tasks={col.tasks}
-                />
-              ))}
-            </div>
+          {columns ?
+            <SortableContext
+              items={columns?.map(col => `column-${col.id}`)}
+              strategy={horizontalListSortingStrategy}
+            >
+              <div className="flex gap-6 w-max">
+                {columns?.map(col => (
+                  <SortableColumn
+                    setColumns={setColumns}
+                    key={`column-${col.id}`}
+                    id={`column-${col.id}`}
+                    title={col.name}
+                    tasks={col.tasks}
+                  />
+                ))}
+              </div>
 
-          </SortableContext>
+            </SortableContext>
+            : ""
+          }
+
 
           <DragOverlay>
             {activeTask ? (
@@ -119,7 +145,7 @@ const Board = () => {
               <div className="w-64 bg-gray-100 rounded-lg shadow-md p-4">
                 <h3 className="font-bold text-lg">{activeColumn.name}</h3>
                 <div className="mt-2 space-y-2">
-                  {activeColumn.tasks.map(task => (
+                  {activeColumn.tasks?.map(task => (
                     <BoardCard key={task.id} id={task.id} title={task.title} />
                   ))}
                 </div>
@@ -132,6 +158,70 @@ const Board = () => {
 
 
       </div>
+      <SimpleModal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+        <h2 className="text-xl font-bold mb-4">Delete Board</h2>
+        <p className="mb-4">Are you sure you want to delete this board? This action cannot be undone.</p>
+
+        <div className="flex gap-4 justify-end">
+          <button
+            onClick={() => setIsDeleteModalOpen(false)}
+            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleDeleteBoard}
+            className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+          >
+            Delete
+          </button>
+        </div>
+      </SimpleModal>
+      <SimpleModal isOpen={isSettingsModalOpen} onClose={() => setIsSettingsModalOpen(false)}>
+  <h2 className="text-xl font-bold mb-4">Board Settings</h2>
+
+  {/* Rename (UI only for now) */}
+  <div className="mb-6">
+    <label className="block text-sm font-medium mb-2">Board Name</label>
+    <input
+      type="text"
+      // defaultValue={board?.name}
+      className="w-full border rounded px-3 py-2"
+      disabled // 🔒 UI only now
+    />
+    <p className="text-xs text-gray-500 mt-1">Renaming will be available soon.</p>
+  </div>
+
+  {/* Manage Members (UI only for now) */}
+  <div className="mb-6">
+    <h3 className="text-lg font-semibold mb-2">Members</h3>
+    <div className="flex gap-2 mb-2">
+      <div className="h-8 w-8 rounded-full bg-gray-300"></div>
+      <div className="h-8 w-8 rounded-full bg-gray-400"></div>
+      <div className="h-8 w-8 rounded-full bg-gray-500"></div>
+    </div>
+    <button
+      className="px-3 py-1 rounded bg-gray-200 text-sm hover:bg-gray-300"
+      disabled // 🔒 placeholder
+    >
+      Invite Member (Coming Soon)
+    </button>
+  </div>
+
+  {/* Delete Board (Working now ✅) */}
+  <div className="border-t pt-4">
+    <h3 className="text-lg font-semibold text-red-600 mb-2">Danger Zone</h3>
+    <p className="text-sm text-gray-600 mb-3">
+      Once you delete a board, there is no going back.
+    </p>
+    <button
+      onClick={handleDeleteBoard}
+      className="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700"
+    >
+      Delete Board
+    </button>
+  </div>
+</SimpleModal>
     </div>
   );
 };

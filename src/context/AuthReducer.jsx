@@ -1,21 +1,29 @@
 import { setAuthToken } from "../lib/axios";
-
-
 export const initialAuthState = {
-  user: null,
+  user: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null,
   token: localStorage.getItem("token") || null,
 };
-
 export function authReducer(state, action) {
   switch (action.type) {
-    
-    case 'LOGIN':
-      setAuthToken(state.token)
-      return { ...state, user: action.payload.user, token: action.payload.token };
-    case 'LOGOUT':
-      setAuthToken(null)
+    case 'LOGIN': {
+      const { user, token } = action.payload;
 
+      // Save new values
+      setAuthToken(token);
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      return { ...state, user, token };
+    }
+
+    case 'LOGOUT':
+      setAuthToken(null);
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
       return { user: null, token: null };
+
     default:
       return state;
   }

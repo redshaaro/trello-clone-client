@@ -4,9 +4,10 @@ export const signup = async (username, password) => {
 
 
     try {
-        await publicAxios.post("http://localhost:3000/api/auth/register", {
+     const res=   await publicAxios.post("http://localhost:3000/api/auth/register", {
             username, password
         })
+        return res
 
 
 

@@ -13,6 +13,9 @@ import { useApp } from '../context/AppContext';
 const Home = () => {
   const navigate = useNavigate();
   const { state } = useAuth();
+console.log(state.user?.username);
+  
+   
   const { boards, setBoards } = useApp()
 
   useEffect(() => {
@@ -39,9 +42,9 @@ const Home = () => {
     <div className="relative overflow-hidden min-h-screen">
       <VantaBackground />
       <div className="relative z-10">
-        <div className='text-center mt-5 text-4xl text-[#172B4D]'>Welcome {state.user} ❤</div>
+        <div className='text-center mt-5 text-4xl text-[#172B4D]'>Welcome {state.user?.username}  ❤</div>
         <div className='p-2 m-2 text-[#172B4D] font-medium'>Your Boards:</div>
-        <div className='flex items-center justify-between flex-wrap p-2 m-2 gap-1'>
+        <div className='flex items-center  flex-wrap p-2 m-2 gap-4'>
           {boards?.map((board) => (
             <HomeBoard key={board.id} id={board.id} title={board.name} image={image1} />
           ))}

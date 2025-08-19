@@ -12,7 +12,7 @@ const SimpleModal = ({ isOpen, onClose, children }) => {
             />
 
             {/* Modal card */}
-            <div className="relative z-10 bg-white rounded-lg shadow-md p-6 w-full max-w-md">
+            <div className="relative z-10 bg-white rounded-lg shadow-md p-6 w-full max-w-md max-h-[683px] overflow-y-auto">
                 {children}
             </div>
         </div>

@@ -2,7 +2,7 @@
 import { useState } from "react"
 import { createBoard } from "../services/BoardService";
 
-const CreateBoardForm = ({ setIsModalOpen, boards, setBoards }) => {
+const CreateBoardForm = ({ setIsModalOpen, setBoards }) => {
   const [name, setName] = useState("");
   const [error, setError] = useState(null);
 
@@ -10,8 +10,7 @@ const CreateBoardForm = ({ setIsModalOpen, boards, setBoards }) => {
     e.preventDefault();
     try {
       const res = await createBoard(name);
-      console.log("this is response from handle submit")
-      console.log(res)
+      
       if (res) {
         setBoards(prevBoards => [...prevBoards, res]);
         setIsModalOpen(false);

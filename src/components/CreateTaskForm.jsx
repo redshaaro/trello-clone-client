@@ -8,11 +8,11 @@ const CreateTaskForm = ({ setIsModalOpen, columnId, setColumns }) => {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-   const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         setError(null);
-        
+
         try {
             const res = await createTask({
                 title,
@@ -21,22 +21,20 @@ const CreateTaskForm = ({ setIsModalOpen, columnId, setColumns }) => {
                 column_id: columnId
             });
 
-            console.log("API Response:", res); // Debug response
+
 
             // Update state with the new task
             setColumns(prevColumns => {
-                console.log("Previous Columns:", prevColumns); // Debug current state
-                console.log("Column ID to match:", columnId); // Debug the column ID we're looking for
+
 
                 return prevColumns.map(column => {
-                    console.log("Current Column ID:", column.id, "Type:", typeof column.id); // Debug each column
-                    console.log("Looking for ID:", columnId, "Type:", typeof columnId); // Debug target ID
 
-                    // Convert both to String for reliable comparison
+
+
                     if (String(column.id) === String(columnId)) {
-                        console.log("Match found! Adding task to column:", column.name);
-                        
-                        // Use the correct response structure
+
+
+
                         const newTask = res.data?.createdtask || res.data || res;
                         console.log("New Task:", newTask);
 

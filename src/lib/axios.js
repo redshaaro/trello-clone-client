@@ -32,6 +32,7 @@ export const setAuthToken = (token) => {
         delete authAxios.defaults.headers.common['Authorization'];
     }
 };
+ 
 authAxios.interceptors.response.use(
     (response) => response,
     (error) => {
