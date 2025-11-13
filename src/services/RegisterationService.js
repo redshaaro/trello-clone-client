@@ -2,7 +2,7 @@ import { publicAxios } from "../lib/axios";
 
 export const signup = async (username, email, password) => {
     try {
-        const res = await publicAxios.post("http://localhost:3000/api/auth/register", {
+        const res = await publicAxios.post("/auth/register", {
             username,
             email,
             password
@@ -15,7 +15,7 @@ export const signup = async (username, email, password) => {
 }
 export const login = async (username, password) => {
     try {
-     const res = await publicAxios.post("http://localhost:3000/api/auth/login", {
+     const res = await publicAxios.post("/auth/login", {
             username, password
         })
 
