@@ -5,6 +5,14 @@ body{
   box-sizing: border-box;
   background-color: #FFF;
 }
+
+/* All buttons should have pointer cursor */
+button, 
+a, 
+[role="button"],
+.cursor-pointer {
+  cursor: pointer;
+}
  
 .DragOverlay {
   cursor: grabbing;

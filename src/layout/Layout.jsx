@@ -6,7 +6,9 @@ import { useAuth } from "../context/AuthContext";
 
 const Layout = () => {
   const state = useAuth()
+  console.log(state)
   const token = state.state.token
+  console.log(token)
 
 
   return (

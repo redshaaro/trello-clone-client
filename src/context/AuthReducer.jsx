@@ -18,6 +18,15 @@ export function authReducer(state, action) {
       return { ...state, user, token };
     }
 
+    case 'UPDATE_USER': {
+      const updatedUser = action.payload;
+      
+      // Save updated user to localStorage
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      return { ...state, user: updatedUser };
+    }
+
     case 'LOGOUT':
       setAuthToken(null);
       localStorage.removeItem("user");

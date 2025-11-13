@@ -1,11 +1,14 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 // Create context
 const AppContext = createContext();
 
 // Context provider component
 export function AppProvider({ children }) {
-    const [boards, setBoards] = useState([])
+    const [boards, setBoards] = useState({
+        ownedBoards: [],
+        memberBoards: []
+    });
     const value = { boards, setBoards }
 
 

@@ -6,10 +6,13 @@ import EditTaskForm from "./EditTaskForm";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 
 
-const BoardCard = ({ id, title, setColumns }) => {
+const BoardCard = ({ id, title, setColumns, canEdit = true }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging: isActiveDragging } = useSortable({ id });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging: isActiveDragging } = useSortable({ 
+    id,
+    disabled: !canEdit // Disable dragging for viewers
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -21,34 +24,35 @@ const BoardCard = ({ id, title, setColumns }) => {
     <>
       <div
         ref={setNodeRef}
-
         style={style}
-       className="p-3 mb-2 rounded shadow bg-white hover:bg-gray-50 flex justify-between items-center"
-        onClick={() => setIsModalOpen(true)} // open modal on click
+        className="p-2 sm:p-3 rounded shadow bg-white hover:bg-gray-50 flex justify-between items-center cursor-pointer transition-colors"
+        onClick={() => setIsModalOpen(true)}
       >
-        <div
-          onClick={() => setIsModalOpen(true)}
-          className="cursor-pointer flex-grow"
-        >
+        <div className="flex-grow pr-2 text-sm sm:text-base break-words">
           {title}
         </div>
-        <div
-          {...attributes}
-          {...listeners}
-          className="cursor-grab text-gray-400 hover:text-gray-600"
-        >
-           <DragIndicatorIcon fontSize="small" />
-           
-        </div>
+        {canEdit && (
+          <div
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 flex-shrink-0"
+            onClick={(e) => e.stopPropagation()} // Prevent opening modal when grabbing
+          >
+            <DragIndicatorIcon fontSize="small" />
+          </div>
+        )}
       </div>
 
       <SimpleModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2 className="text-xl font-bold mb-4">Edit Task</h2>
-        <EditTaskForm
-          taskId={id}
-          setIsModalOpen={setIsModalOpen}
-          setColumns={setColumns}
-        />
+        <h2 className="text-xl font-bold mb-4">{canEdit ? 'Edit Task' : 'View Task'}</h2>
+        {isModalOpen && (
+          <EditTaskForm
+            taskId={id}
+            setIsModalOpen={setIsModalOpen}
+            setColumns={setColumns}
+            canEdit={canEdit}
+          />
+        )}
       </SimpleModal>
     </>
   );

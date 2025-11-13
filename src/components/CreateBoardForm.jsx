@@ -10,9 +10,13 @@ const CreateBoardForm = ({ setIsModalOpen, setBoards }) => {
     e.preventDefault();
     try {
       const res = await createBoard(name);
-      
+
       if (res) {
-        setBoards(prevBoards => [...prevBoards, res]);
+        setBoards(prev => ({
+          ...prev,
+          
+          ownedBoards: [...prev.ownedBoards, res]
+        }));
         setIsModalOpen(false);
       } else {
         setError('Failed to create board');

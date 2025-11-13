@@ -6,7 +6,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CloseIcon from '@mui/icons-material/Close';
 import ColumnSettingsList from './ColumnSettingsList';
 
-const SortableColumn = ({ id,setColumns, title, tasks = [] }) => {
+const SortableColumn = ({ id, setColumns, title, tasks = [], canEdit = true }) => {
   const [isOpen, setIsOpen] = useState(false);
   const settingsRef = useRef(null);
 
@@ -30,7 +30,10 @@ const SortableColumn = ({ id,setColumns, title, tasks = [] }) => {
     setNodeRef,
     transform,
     transition,
-  } = useSortable({ id });
+  } = useSortable({ 
+    id,
+    disabled: !canEdit // Disable column dragging for viewers
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -41,34 +44,36 @@ const SortableColumn = ({ id,setColumns, title, tasks = [] }) => {
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-gray-100 rounded p-3 w-80 min-h-[300px] max-h-[90vh] overflow-y-auto relative"
+      className="bg-gray-100 rounded p-3 w-72 sm:w-80 md:w-[320px] min-h-[250px] sm:min-h-[300px] max-h-[calc(100vh-200px)] sm:max-h-[90vh] overflow-y-auto relative flex-shrink-0"
     >
-      <div className='flex items-center justify-between w-full'>
+      <div className='flex items-center justify-between w-full mb-3'>
         {/* Drag handle */}
-        <div {...attributes} {...listeners} className="flex-grow cursor-grab">
-          <h2 className="font-semibold mb-2 inline-block">{title}</h2>
+        <div {...attributes} {...listeners} className={`flex-grow ${canEdit ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'}`}>
+          <h2 className="font-semibold text-sm sm:text-base">{title}</h2>
         </div>
 
-        {/* Settings button */}
-        <div className="relative" ref={settingsRef}>
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="p-1 hover:bg-gray-200 rounded"
-          >
-            {isOpen ? <CloseIcon /> : <MoreVertIcon />}
-          </button>
+        {/* Settings button - Only show if user can edit */}
+        {canEdit && (
+          <div className="relative" ref={settingsRef}>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-1 hover:bg-gray-200 rounded transition-colors"
+            >
+              {isOpen ? <CloseIcon fontSize="small" /> : <MoreVertIcon fontSize="small" />}
+            </button>
 
-          {isOpen && <ColumnSettingsList columnId={id.replace('column-', '')} setColumns={setColumns} onClose={() => setIsOpen(false)} />}
-        </div>
+            {isOpen && <ColumnSettingsList columnId={id.replace('column-', '')} columnName={title} setColumns={setColumns} onClose={() => setIsOpen(false)} />}
+          </div>
+        )}
       </div>
 
       <SortableContext
         items={tasks.map(t => t.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2 sm:gap-3">
           {tasks.map(task => (
-            <BoardCard  setColumns={setColumns} key={task.id} id={task.id} title={task.title} />
+            <BoardCard setColumns={setColumns} key={task.id} id={task.id} title={task.title} canEdit={canEdit} />
           ))}
         </div>
       </SortableContext>

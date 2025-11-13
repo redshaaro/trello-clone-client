@@ -5,6 +5,7 @@ const CreateTaskForm = ({ setIsModalOpen, columnId, setColumns }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [status, setStatus] = useState("todo");
+    const [dueDate, setDueDate] = useState("");
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -18,6 +19,7 @@ const CreateTaskForm = ({ setIsModalOpen, columnId, setColumns }) => {
                 title,
                 description,
                 status,
+                due_date: dueDate || null,
                 column_id: columnId
             });
 
@@ -36,7 +38,6 @@ const CreateTaskForm = ({ setIsModalOpen, columnId, setColumns }) => {
 
 
                         const newTask = res.data?.createdtask || res.data || res;
-                        console.log("New Task:", newTask);
 
                         return {
                             ...column,
@@ -76,14 +77,24 @@ const CreateTaskForm = ({ setIsModalOpen, columnId, setColumns }) => {
                 required
                 disabled={isLoading}
             />
-            <input
-                type="text"
-                placeholder="Enter Task Description"
+            <textarea
+                placeholder="Enter Task Description (optional)"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full p-2 border border-gray-300 rounded mb-4"
                 disabled={isLoading}
+                rows="3"
             />
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Due Date (optional)</label>
+                <input
+                    type="date"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded"
+                    disabled={isLoading}
+                />
+            </div>
             <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}

@@ -1,4 +1,6 @@
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { useDroppable } from '@dnd-kit/core'
+import BoardCard from './BoardCard'
 
 const Column = ({ id, title, tasks }) => {
   const { setNodeRef } = useDroppable({ id })

@@ -37,12 +37,12 @@ const Modal = ({ isOpen, onClose, children }) => {
     return (
         <div
             ref={vantaRef}
-            className="fixed inset-0 z-50 flex justify-center items-center"
+            className="fixed inset-0 z-50 flex justify-center items-center p-2 sm:p-4"
         >
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md relative z-10">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-[95%] sm:w-[90%] max-w-md relative z-10 max-h-[90vh] overflow-y-auto">
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+                    className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl sm:text-2xl cursor-pointer"
                 >
                     ✖
                 </button>

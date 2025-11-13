@@ -18,7 +18,8 @@ const CreateColumnForm = ({ setIsModalOpen, boardId, setColumns, columns }) => {
       setColumns([...columns, newColumn])
       setIsModalOpen(false)
     } catch (err) {
-      console.log(err)
+      console.error(err)
+      alert("Failed to create column. Please try again.")
     }
   }
 
